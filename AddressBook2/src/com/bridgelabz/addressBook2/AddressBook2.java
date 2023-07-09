@@ -1,9 +1,6 @@
 package com.bridgelabz.addressBook2;
-//UC1
-/*Ability to create a Contacts in Address
-Book with first and last names, address,
-city, state, zip, phone number and
-email...*/
+//UC2
+import java.util.*;
 
 class Contact{
     private String firstName;
@@ -95,16 +92,55 @@ class Contact{
             " Address: " + address +
             " City: " + city +
             " State: "+ state +
+            " Zip Code: "+zip +
             " Phone: " + phone +
             " Email: " + email;
     }
 }
-public class AddressBook2 {
+ class AddressBook2 {
+    private List<Contact> conctacts;
+    public AddressBook2(){
+    this.conctacts=new ArrayList<>();
+    }
+    public void addContact(Contact contact){
+        conctacts.add(contact);
+    }
+    public void displayContacts(){
+        for(Contact contact: conctacts){
+            System.out.println(contact.toString());
+        }
+    }
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book program.");
-        Contact contact = new Contact("John", "Wick", "Beverly Hills","San Francisco","California","355678",789943456,"johnwick@gmail.com");
-        Contact contact2 = new Contact("Tom", "Hanks", "Beverly Hills","San Francisco","California","367890",907943456,"johnwick@gmail.com");
-        System.out.println(contact.toString());
-        System.out.println(contact2.toString());
+        AddressBook2 addressBook = new AddressBook2();
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter first name: ");
+        String firstName =sc.nextLine();
+        System.out.print("Enter last name: ");
+        String lastName =sc.nextLine();
+        System.out.print("Address: ");
+        String address = sc.nextLine();
+        System.out.print("City: ");
+        String city = sc.nextLine();
+        System.out.print("State: ");
+        String state = sc.nextLine();
+        System.out.print("Enter zip code: ");
+        String zip = sc.nextLine();
+        System.out.print("Enter email: ");
+        String email =sc.nextLine();
+        System.out.print("Enter phone: ");
+        long phone=sc.nextLong();
+
+
+
+
+       Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
+       addressBook.addContact(contact);
+        System.out.println("\nAdded contact details: ");
+        addressBook.displayContacts();
+//        Contact contact2 = new Contact("Tom", "Hanks", "Beverly Hills","San Francisco","California","367890",907943456,"johnwick@gmail.com");
+//        System.out.println(contact.toString());
+//        System.out.println(contact2.toString());
     }
 }
