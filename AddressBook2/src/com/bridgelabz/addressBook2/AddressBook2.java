@@ -1,5 +1,5 @@
 package com.bridgelabz.addressBook2;
-//UC3
+//UC4 - Ability to delete a person using person's name - Use Console to delete a person
 import java.util.*;
 
 class Contact{
@@ -146,6 +146,22 @@ class Contact{
         }
          System.out.println("Contact with "+firstName+ " not found.");
      }
+     public void deleteContact(String firstNameToDelete){
+       Contact contactToDelete = null;
+       for (Contact contact: contacts){
+           if(contact.getFirstName().equals(firstNameToDelete)){
+               contactToDelete=contact;
+               break;
+           }
+       }
+       if(contactToDelete !=null){
+           contacts.remove(contactToDelete);// Removing the object contact from the list using list_name.remove method
+           System.out.println("Contact with first-name "+ firstNameToDelete + " has been successfully deleted. ");
+       }
+       else{
+           System.out.println("Contact with first-name "+ firstNameToDelete + " not found. ");
+       }
+     }
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book program.");
         AddressBook2 addressBook = new AddressBook2();
@@ -162,8 +178,16 @@ class Contact{
         System.out.println("Enter the first name of the contact to edit: ");
         String firstName=sc.nextLine();
         addressBook.editContact(firstName);
-        System.out.println("\nUpdated contact details are: ");
+        System.out.println("\nLatest contact book details are: ");
         addressBook.displayContacts();
+
+
+        System.out.println("Enter the first name of the contact to delete: ");
+        String firstNameToDelete= sc.nextLine();
+        addressBook.deleteContact(firstNameToDelete);
+        System.out.println("\nLatest contact details are: ");
+        addressBook.displayContacts();
+
 
     }
 }
