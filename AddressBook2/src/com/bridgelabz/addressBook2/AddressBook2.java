@@ -1,5 +1,7 @@
 package com.bridgelabz.addressBook2;
-//UC4 - Ability to delete a person using person's name - Use Console to delete a person
+//UC5 - Ability to add multiple person to Address Book
+//- Use Console to add person details one at a time
+//- Use Collection Class to maintain multiple contact persons in Address Book
 import java.util.*;
 
 class Contact{
@@ -165,16 +167,49 @@ class Contact{
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book program.");
         AddressBook2 addressBook = new AddressBook2();
-        Contact contact1 = new Contact("John", "Doe", "123 Main St", "City", "State", "12345", 1234567890, "john@example.com");
-        Contact contact2 = new Contact("Jane", "Smith", "456 Park Ave", "Town", "State", "56789", 9876543210L, "jane@example.com");
+        Scanner sc=new Scanner(System.in);
+        boolean addMoreContacts = true;
 
-        addressBook.addContact(contact1);
-        addressBook.addContact(contact2);
+        while (addMoreContacts){
+            System.out.print("Enter first name: ");
+            String firstName =sc.nextLine();
+            System.out.println("Last name: ");
+            String lastName =sc.nextLine();
+            System.out.println("Address: ");
+            String address =sc.nextLine();
+
+            System.out.println("City : ");
+            String city =sc.nextLine();
+            System.out.println("State: ");
+            String state =sc.nextLine();
+            System.out.println("Zip: ");
+            String zip =sc.nextLine();
+            System.out.println("Phone: ");
+            long phone =sc.nextLong();
+            sc.nextLine(); // Consume newline character
+            System.out.println("Email: ");
+            String email =sc.nextLine();
+
+            Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
+            addressBook.addContact(contact);
+
+            System.out.println("Do you want to add another contact? (yes/no)");
+            String adddMore = sc.nextLine();
+            addMoreContacts = adddMore.equalsIgnoreCase("yes");//equalsIgnoreCase is a method available in the String class.
+            // It compares two strings, ignoring the case of the characters.
+            // In this case, it compares the value of addMore with the string "yes".
+
+        }
+
+//        Contact contact1 = new Contact("John", "Doe", "123 Main St", "City", "State", "12345", 1234567890, "john@example.com");
+//        Contact contact2 = new Contact("Jane", "Smith", "456 Park Ave", "Town", "State", "56789", 9876543210L, "jane@example.com");
+
+//        addressBook.addContact(contact1);
+//        addressBook.addContact(contact2);
 
         System.out.println("Contents of the contact book: ");
         addressBook.displayContacts();
 
-        Scanner sc=new Scanner(System.in);
         System.out.println("Enter the first name of the contact to edit: ");
         String firstName=sc.nextLine();
         addressBook.editContact(firstName);
