@@ -1,9 +1,16 @@
 package com.bridgelabz.addressBook2;
-//UC6 - Refactor to add multiple Address Book to the
-//System. Each Address Book
-//has a unique Name - Use Console to add new Address Book - Maintain Dictionary of Address Book Name
-// to Address book
+//UC7 - Refactor the code to add the ability to ensure there is no Duplicate entry of the same Person in
+// a particular Address Book
+//- Duplicate Check is done on Person Name while adding person to Address Book.
+//- Use Collection Methods to Search Person by Name for Duplicate Entry
+//- Override equals method to check for Duplicate
 
+/*
+To prevent duplicate entries of the same person in a particular Address Book,
+ we need to override the equals method in the Contact class and use collection methods
+ to search for duplicates while adding a person to an Address Book. We'll also use a HashSet
+  to efficiently check for duplicates based on the equals method we override.
+*/
 
 import java.util.*;
 
@@ -101,14 +108,32 @@ class Contact{
             " Phone: " + phone +
             " Email: " + email;
     }
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj)
+            return true;
+        if(obj == null || getClass() != obj.getClass())
+            return false;
+        Contact other = (Contact) obj;
+        return firstName.equals(other.firstName) && lastName.equals(other.lastName);
+    }
+    @Override
+    public  int hashCode(){
+        return  Objects.hash(firstName,lastName);
+    }
 }
  class AddressBook {
-    private List<Contact> contacts;
+    private Set<Contact> contacts;
     public AddressBook(){
-    this.contacts=new ArrayList<>();
+    this.contacts=new HashSet<>();
     }
     public void addContact(Contact contact){
-        contacts.add(contact);
+        if(contacts.contains(contact)){
+            System.out.println("Duplicate entry! Contact with same name exists.");
+        }else {
+            contacts.add(contact);
+            System.out.println("Contact added successfully.");
+        }
     }
     public void displayContacts(){
         for(Contact contact: contacts){
