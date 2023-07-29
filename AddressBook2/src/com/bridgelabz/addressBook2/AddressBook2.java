@@ -1,7 +1,10 @@
 package com.bridgelabz.addressBook2;
-//UC5 - Ability to add multiple person to Address Book
-//- Use Console to add person details one at a time
-//- Use Collection Class to maintain multiple contact persons in Address Book
+//UC6 - Refactor to add multiple Address Book to the
+//System. Each Address Book
+//has a unique Name - Use Console to add new Address Book - Maintain Dictionary of Address Book Name
+// to Address book
+
+
 import java.util.*;
 
 class Contact{
@@ -99,9 +102,9 @@ class Contact{
             " Email: " + email;
     }
 }
- class AddressBook2 {
+ class AddressBook {
     private List<Contact> contacts;
-    public AddressBook2(){
+    public AddressBook(){
     this.contacts=new ArrayList<>();
     }
     public void addContact(Contact contact){
@@ -109,6 +112,7 @@ class Contact{
     }
     public void displayContacts(){
         for(Contact contact: contacts){
+
             System.out.println(contact.toString());
         }
 
@@ -143,7 +147,7 @@ class Contact{
                 contact.setPhone(phone);
                 contact.setEmail(email);
                 System.out.println("Contact details has been updated successfully.");
-
+                return;
             }
         }
          System.out.println("Contact with "+firstName+ " not found.");
@@ -163,66 +167,133 @@ class Contact{
        else{
            System.out.println("Contact with first-name "+ firstNameToDelete + " not found. ");
        }
-     }
+     }}
+     public class AddressBook2{
+        //Creating a map of Address book
+         private Map<String, AddressBook> addressBooks;
+
+         public AddressBook2(){
+             this.addressBooks= new HashMap<>();
+         }
+         public void addAddressBook(String name){
+             addressBooks.put(name, new AddressBook());
+         }
+         public void addContactToAddressBook(String bookName, Contact contact){
+             AddressBook addressBook = addressBooks.get(bookName);
+             if(addressBook != null){
+                 addressBook.addContact(contact);
+             }else{
+                 System.out.println("Address book with name "+ bookName + " not found.");
+             }
+         }
+         public void displayContactsInAddressBook(String bookName){
+             AddressBook addressBook = addressBooks.get(bookName);
+             if(addressBook != null){
+                 addressBook.displayContacts();
+             }else{
+                 System.out.println("Address book with name "+ bookName + " not found.");
+             }
+         }
+         public void editContactsInAddressBook(String bookName, String firstName){
+             AddressBook addressBook = addressBooks.get(bookName);
+             if(addressBook != null){
+                 addressBook.editContact(firstName);
+             }else{
+                 System.out.println("Address book with name "+ bookName + " not found.");
+             }
+         }
+         public void deleteContactsInAddressBook(String bookName, String firstNameToDelete){
+             AddressBook addressBook = addressBooks.get(bookName);
+             if(addressBook != null){
+                 addressBook.deleteContact(firstNameToDelete);
+             }else{
+                 System.out.println("Address book with name "+ bookName + " not found.");
+             }
+         }
+
     public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        AddressBook2 addressBookSystem = new AddressBook2();
         System.out.println("Welcome to Address Book program.");
-        AddressBook2 addressBook = new AddressBook2();
-        Scanner sc=new Scanner(System.in);
-        boolean addMoreContacts = true;
 
-        while (addMoreContacts){
-            System.out.print("Enter first name: ");
-            String firstName =sc.nextLine();
-            System.out.println("Last name: ");
-            String lastName =sc.nextLine();
-            System.out.println("Address: ");
-            String address =sc.nextLine();
+        while(true){
+            System.out.println("\n Menu");
+            System.out.println("1. Add a new address book.");
+            System.out.println("2. Add a contact to address book.");
+            System.out.println("3. Display contacts from address book.");
+            System.out.println("4. Edit a contact in address book.");
+            System.out.println("5. Delete a contact from address book.");
+            System.out.println("6. Exit");
 
-            System.out.println("City : ");
-            String city =sc.nextLine();
-            System.out.println("State: ");
-            String state =sc.nextLine();
-            System.out.println("Zip: ");
-            String zip =sc.nextLine();
-            System.out.println("Phone: ");
-            long phone =sc.nextLong();
-            sc.nextLine(); // Consume newline character
-            System.out.println("Email: ");
-            String email =sc.nextLine();
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice){
+                case 1:
+                    System.out.println("Enter the name of new address book.");
+                    String bookName = sc.nextLine();
+                    addressBookSystem.addAddressBook(bookName);
+                    break;
+                case 2:
+                    System.out.println("Enter the name of address book to add contact.");
+                    String addBookName = sc.nextLine();
 
-            Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
-            addressBook.addContact(contact);
+                    System.out.println("Enter first name");
+                    String firstName = sc.nextLine();
+                    System.out.println("Enter last name");
+                    String lastName = sc.nextLine();
+                    System.out.println("Enter address");
+                    String address = sc.nextLine();
+                    System.out.println("Enter city");
+                    String city = sc.nextLine();
+                    System.out.println("Enter state");
+                    String state = sc.nextLine();
+                    System.out.println("Enter zip");
+                    String zip = sc.nextLine();
+                    System.out.println("Enter phone");
+                    long phone = sc.nextLong();
+                    sc.nextLine(); // Consume newline character
+                    System.out.println("Enter email");
+                    String email = sc.nextLine();
 
-            System.out.println("Do you want to add another contact? (yes/no)");
-            String adddMore = sc.nextLine();
-            addMoreContacts = adddMore.equalsIgnoreCase("yes");//equalsIgnoreCase is a method available in the String class.
-            // It compares two strings, ignoring the case of the characters.
-            // In this case, it compares the value of addMore with the string "yes".
+                    // Create a new contact object with the collected details
+                    Contact newContact = new Contact(firstName, lastName, address, city, state, zip, phone, email);
+                    addressBookSystem.addContactToAddressBook(addBookName, newContact);
+                    break;
 
+                case 3:
+                    System.out.println("Enter the name of address book to display contacts.");
+                    String displayBookName = sc.nextLine();
+                    addressBookSystem.displayContactsInAddressBook(displayBookName);
+                    break;
+
+                case 4:
+                    System.out.println("Enter the name of contact book in which you want to update a contact");
+                    String editBookName = sc.nextLine();
+                    System.out.println("Enter the first name of the contact to edit");
+                    String editFirstName = sc.nextLine();
+                    addressBookSystem.editContactsInAddressBook(editBookName, editFirstName);
+                    break;
+
+                case 5:
+                    System.out.println("Enter the name of address book containing the contact that you want to delete.");
+                    String deleteBookName = sc.nextLine();
+                    System.out.println("Enter the first name of the contact to delete: ");
+                    String deleteFirstName = sc.nextLine();
+                    addressBookSystem.deleteContactsInAddressBook(deleteBookName, deleteFirstName);
+                    break;
+                case 6:
+                    System.out.println("Exiting the address book system.");
+                    sc.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+
+            }
         }
 
-//        Contact contact1 = new Contact("John", "Doe", "123 Main St", "City", "State", "12345", 1234567890, "john@example.com");
-//        Contact contact2 = new Contact("Jane", "Smith", "456 Park Ave", "Town", "State", "56789", 9876543210L, "jane@example.com");
-
-//        addressBook.addContact(contact1);
-//        addressBook.addContact(contact2);
-
-        System.out.println("Contents of the contact book: ");
-        addressBook.displayContacts();
-
-        System.out.println("Enter the first name of the contact to edit: ");
-        String firstName=sc.nextLine();
-        addressBook.editContact(firstName);
-        System.out.println("\nLatest contact book details are: ");
-        addressBook.displayContacts();
-
-
-        System.out.println("Enter the first name of the contact to delete: ");
-        String firstNameToDelete= sc.nextLine();
-        addressBook.deleteContact(firstNameToDelete);
-        System.out.println("\nLatest contact details are: ");
-        addressBook.displayContacts();
-
-
     }
-}
+    }
+
