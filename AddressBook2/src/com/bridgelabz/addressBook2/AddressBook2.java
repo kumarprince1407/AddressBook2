@@ -1,18 +1,18 @@
 package com.bridgelabz.addressBook2;
-//UC7 - Refactor the code to add the ability to ensure there is no Duplicate entry of the same Person in
-// a particular Address Book
-//- Duplicate Check is done on Person Name while adding person to Address Book.
-//- Use Collection Methods to Search Person by Name for Duplicate Entry
-//- Override equals method to check for Duplicate
+//UC8 - Refactor the code to Ability to search Person in a City or State across the multiple Address Book
+// - Search Result can show multiple person in the city or state
+
+//- Use Java Streams
 
 /*
-To prevent duplicate entries of the same person in a particular Address Book,
- we need to override the equals method in the Contact class and use collection methods
- to search for duplicates while adding a person to an Address Book. We'll also use a HashSet
-  to efficiently check for duplicates based on the equals method we override.
+
+To implement the ability to search for a person in a city or state across multiple Address Books using
+ Java Streams, we can add new methods in the AddressBook2 class. These methods will perform the search
+ and return a list of contacts matching the given city or state.
 */
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Contact{
     private String firstName;
@@ -142,6 +142,9 @@ class Contact{
         }
 
     }
+    public Set<Contact> getContacts(){
+        return contacts;
+    }
      public void editContact(String firstName){
         for(Contact contact: contacts){
             if(contact.getFirstName().equals(firstName)){
@@ -235,7 +238,18 @@ class Contact{
                  System.out.println("Address book with name "+ bookName + " not found.");
              }
          }
-
+public List<Contact> searchByCity(String city){
+             return addressBooks.values().stream()
+                     .flatMap(addressBook -> addressBook.getContacts().stream())
+                     .filter(contact -> contact.getCity().equalsIgnoreCase(city))
+                     .collect(Collectors.toList());
+}
+         public List<Contact> searchByState(String state) {
+             return addressBooks.values().stream()
+                     .flatMap(addressBook -> addressBook.getContacts().stream())
+                     .filter(contact -> contact.getState().equalsIgnoreCase(state))
+                     .collect(Collectors.toList());
+         }
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
@@ -250,7 +264,10 @@ class Contact{
             System.out.println("3. Display contacts from address book.");
             System.out.println("4. Edit a contact in address book.");
             System.out.println("5. Delete a contact from address book.");
-            System.out.println("6. Exit");
+            System.out.println("6. Search a contact by city.");
+            System.out.println("7. Search a contact by state.");
+
+            System.out.println("8. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -309,7 +326,29 @@ class Contact{
                     String deleteFirstName = sc.nextLine();
                     addressBookSystem.deleteContactsInAddressBook(deleteBookName, deleteFirstName);
                     break;
-                case 6:
+                case 6: // New case for searching by city
+                    System.out.println("Enter the city to search for contacts: ");
+                    String cityToSearch = sc.nextLine();
+                    List<Contact> citySearchResult = addressBookSystem.searchByCity(cityToSearch);
+                    if (!citySearchResult.isEmpty()) {
+                        System.out.println("Contacts in " + cityToSearch + ": ");
+                        citySearchResult.forEach(System.out::println);
+                    } else {
+                        System.out.println("No contacts found in " + cityToSearch + ".");
+                    }
+                    break;
+                case 7: // New case for searching by state
+                    System.out.println("Enter the state to search for contacts: ");
+                    String stateToSearch = sc.nextLine();
+                    List<Contact> stateSearchResult = addressBookSystem.searchByState(stateToSearch);
+                    if (!stateSearchResult.isEmpty()) {
+                        System.out.println("Contacts in " + stateToSearch + ": ");
+                        stateSearchResult.forEach(System.out::println);
+                    } else {
+                        System.out.println("No contacts found in " + stateToSearch + ".");
+                    }
+                    break;
+                case 8:
                     System.out.println("Exiting the address book system.");
                     sc.close();
                     System.exit(0);
